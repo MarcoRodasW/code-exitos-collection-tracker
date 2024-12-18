@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 /* eslint-disable @typescript-eslint/no-namespace */
 export namespace AuthService {
   export async function GetUser() {
+    'use server';
     const supabase = await createClient();
     const {
       data: { user },
