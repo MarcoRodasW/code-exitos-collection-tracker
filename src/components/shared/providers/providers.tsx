@@ -1,7 +1,7 @@
 'use client';
-import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from 'next-themes';
 import * as React from 'react';
+import { Toaster } from 'sonner';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +12,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       {children}
-      <Toaster />
+      <Toaster richColors />
     </ThemeProvider>
   );
 }
