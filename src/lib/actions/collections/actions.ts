@@ -85,3 +85,42 @@ export async function CreateCollection(
     };
   }
 }
+
+export async function DeleteCollection(
+  collection: CollectionData
+): Promise<ApiResponse<null>> {
+  const { supabase, user } = await AuthService.GetUser();
+
+  try {
+    const { error } = await supabase
+      .from('collections')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('id', collection.id);
+
+    if (error) {
+      return {
+        message: error.message,
+        succeed: false,
+        error: error.name,
+        data: null,
+      };
+    }
+    revalidatePath('/collections');
+
+    return {
+      data: null,
+      error: null,
+      message: 'Collection deleted succesfully!',
+      succeed: true,
+    };
+  } catch (error: any) {
+    console.error('Error inserting inventory item:', error);
+    return {
+      error: error.name || 'unknown_error',
+      message: error.message || 'An unknown error occurred.',
+      succeed: false,
+      data: null,
+    };
+  }
+}

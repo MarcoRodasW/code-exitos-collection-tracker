@@ -9,9 +9,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { CollectionData } from '@/lib/types/collections/collections.types';
-import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import DeleteCollectionModal from './modals/delete-collection-modal';
 
 interface CollectionCardProps {
   collection: CollectionData;
@@ -26,15 +26,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isHovered && (
-        <Button
-          variant='destructive'
-          size='icon'
-          className='absolute right-2 top-2 z-10 opacity-0 transition-opacity group-hover:opacity-100'
-        >
-          <X className='h-4 w-4' />
-        </Button>
-      )}
+      {isHovered && <DeleteCollectionModal collection={collection} />}
 
       <div className='relative aspect-[4/3]'>
         <Image
