@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import {
 import { CollectionData } from '@/lib/types/collections/collections.types';
 import Image from 'next/image';
 import { useState } from 'react';
+import CreateCollectionItemModal from './modals/create-collection-item-modal';
 import DeleteCollectionModal from './modals/delete-collection-modal';
 
 interface CollectionCardProps {
@@ -30,7 +30,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
 
       <div className='relative aspect-[4/3]'>
         <Image
-          src={'https://fakeimg.pl/600x400?text=@'}
+          src={collection.image_url ?? 'https://fakeimg.pl/600x400?text=@'}
           alt={collection.name}
           fill
           className='object-cover'
@@ -54,9 +54,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
       </CardContent>
 
       <CardFooter>
-        <Button className='w-full' variant='secondary'>
-          Add Item
-        </Button>
+        <CreateCollectionItemModal collection={collection} />
       </CardFooter>
     </Card>
   );

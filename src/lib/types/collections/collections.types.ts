@@ -27,3 +27,15 @@ export const createCollectionSchema = z.object({
 });
 
 export type createCollection = z.infer<typeof createCollectionSchema>;
+
+export const updateCollectionSchema = z.object({
+  name: z.string().min(2, {
+    message: 'Name must be at least 2 characters.',
+  }),
+  description: z.string().optional(),
+  value: z.number().min(0, {
+    message: 'Value must be a positive number.',
+  }),
+});
+
+export type updateCollection = z.infer<typeof updateCollectionSchema>;

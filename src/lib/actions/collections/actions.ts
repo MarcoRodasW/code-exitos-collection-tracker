@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
 import { AuthService } from '@/lib/services/auth/auth.service';
 import {
   CollectionData,
   createCollectionSchema,
+  updateCollection,
+  updateCollectionSchema,
 } from '@/lib/types/collections/collections.types';
 import { ApiResponse } from '@/lib/types/shared/api-response';
 import { revalidatePath } from 'next/cache';
@@ -56,8 +59,6 @@ export async function CreateCollection(
         user_id: user.id,
       })
       .select('*');
-
-    console.log(error);
 
     if (error) {
       return {
@@ -113,6 +114,59 @@ export async function DeleteCollection(
       error: null,
       message: 'Collection deleted succesfully!',
       succeed: true,
+    };
+  } catch (error: any) {
+    console.error('Error inserting inventory item:', error);
+    return {
+      error: error.name || 'unknown_error',
+      message: error.message || 'An unknown error occurred.',
+      succeed: false,
+      data: null,
+    };
+  }
+}
+
+export async function UpdateCollection(
+  collectionId: string,
+  payload: updateCollection
+): Promise<ApiResponse<CollectionData>> {
+  const { user, supabase } = await AuthService.GetUser();
+  const validatedFields = updateCollectionSchema.safeParse(payload);
+
+  if (!validatedFields.success) {
+    return {
+      error: validatedFields.error.name,
+      message: validatedFields.error.message,
+      succeed: false,
+      data: null,
+    };
+  }
+
+  const { name, description } = validatedFields.data;
+
+  try {
+    const { data: updateData, error: updateError } = await supabase
+      .from('collections')
+      .update({ name: name, description: description })
+      .eq('user_id', user.id)
+      .eq('id', collectionId)
+      .select();
+
+    if (updateError) {
+      return {
+        error: updateError.name,
+        message: updateError.message,
+        succeed: false,
+        data: null,
+      };
+    }
+    const updatedValue = updateData[0];
+    revalidatePath('/collections');
+    return {
+      error: null,
+      message: `Collection ${updatedValue.name} updated succesfully!`,
+      succeed: true,
+      data: updatedValue,
     };
   } catch (error: any) {
     console.error('Error inserting inventory item:', error);

@@ -54,16 +54,12 @@ export default function CreateCollectionsModal() {
       data: collectionData,
       succeed,
       message,
-      error,
     } = await CreateCollection(formData);
     if (collectionData && succeed) {
       toast.success(message);
+      form.reset();
       setOpen(false);
     } else {
-      console.log({
-        error,
-        message,
-      });
       toast.error(message);
     }
   };
