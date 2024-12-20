@@ -6,7 +6,7 @@ import { GetCollections } from '@/lib/services/collections/collections.sevice';
 export default async function CollectionPage() {
   const collections = await GetCollections();
   return (
-    <div className='flex h-full w-full flex-col gap-6'>
+    <section className='flex h-full w-full flex-col gap-6'>
       <div className='flex flex-col items-center justify-between gap-4 sm:flex-row'>
         <div className='w-full sm:w-[300px]'>
           <Input placeholder='Search collections...' />
@@ -19,6 +19,6 @@ export default async function CollectionPage() {
           <CollectionCard key={collection.id} collection={collection} />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
