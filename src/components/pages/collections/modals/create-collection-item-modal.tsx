@@ -17,26 +17,20 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { UpdateCollection } from '@/lib/actions/collections/actions';
 import {
   CollectionData,
   updateCollectionSchema,
 } from '@/lib/types/collections/collections.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Plus, Upload } from 'lucide-react';
+import { Loader2, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import CollectionItemsTable from '../../items/collection-items-table';
+import { CreateItemModal } from '../../items/modals/create-item-modal';
 
 interface CreateCollectionItemModalProps {
   collection: CollectionData;
@@ -44,7 +38,6 @@ interface CreateCollectionItemModalProps {
 export default function CreateCollectionItemModal({
   collection,
 }: CreateCollectionItemModalProps) {
-  const items: any[] = [];
   const [isOpen, setIsOpen] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
 
@@ -83,7 +76,7 @@ export default function CreateCollectionItemModal({
           Add Item
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[90vh] w-[90vw] max-w-4xl overflow-y-auto p-4 sm:p-6'>
+      <DialogContent className='max-h-[90vh] w-[90vw] max-w-5xl overflow-y-auto p-4 sm:p-6'>
         <DialogHeader>
           <DialogTitle>{collection.name}</DialogTitle>
         </DialogHeader>
@@ -195,51 +188,10 @@ export default function CreateCollectionItemModal({
           <div className='space-y-4'>
             <div className='mb-4 flex flex-col items-start justify-between space-y-2 sm:flex-row sm:items-center sm:space-y-0'>
               <h3 className='text-lg font-semibold'>Items</h3>
-              <Button>
-                <Plus className='mr-2 h-4 w-4' /> Add New Item
-              </Button>
+              <CreateItemModal collection={collection} />
             </div>
             <div className='overflow-x-auto'>
-              <div className='overflow-hidden rounded-lg border'>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Image</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Year Made</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Quantity</TableHead>
-                      <TableHead>Total Price</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {items.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>
-                          <div className='relative h-10 w-10'>
-                            <Image
-                              src={
-                                item.image_url ||
-                                '/placeholder.svg?height=40&width=40'
-                              }
-                              alt={item.name}
-                              fill
-                              className='rounded-sm object-cover'
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell>{item.name}</TableCell>
-                        <TableCell>{item.year_made || 'N/A'}</TableCell>
-                        <TableCell>${item.price.toFixed(2)}</TableCell>
-                        <TableCell>{item.quantity}</TableCell>
-                        <TableCell>
-                          ${item.total_price?.toFixed(2) || 'N/A'}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+              <CollectionItemsTable collection={collection} />
             </div>
           </div>
         </div>
