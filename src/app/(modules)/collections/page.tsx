@@ -1,10 +1,10 @@
 import { CollectionCard } from '@/components/pages/collections/collections-card';
 import CreateCollectionsModal from '@/components/pages/collections/modals/create-collections-modal';
 import { Input } from '@/components/ui/input';
-import { CollectionService } from '@/lib/services/collections/collections.sevice';
+import { GetCollections } from '@/lib/services/collections/collections.sevice';
 
 export default async function CollectionPage() {
-  const collections = await CollectionService.GetCollections();
+  const collections = await GetCollections();
   return (
     <div className='flex h-full w-full flex-col gap-6'>
       <div className='flex flex-col items-center justify-between gap-4 sm:flex-row'>

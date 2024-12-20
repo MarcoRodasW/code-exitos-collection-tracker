@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
-import { AuthService } from '@/lib/services/auth/auth.service';
+import { GetUser } from '@/lib/services/auth/auth.service';
 import {
   CollectionData,
   createCollectionSchema,
@@ -15,7 +15,7 @@ import { UploadImageToBucket } from '../shared/actions';
 export async function CreateCollection(
   payload: FormData
 ): Promise<ApiResponse<CollectionData[]>> {
-  const { user, supabase } = await AuthService.GetUser();
+  const { user, supabase } = await GetUser();
 
   const validatedFields = createCollectionSchema.safeParse({
     name: payload.get('name'),
@@ -38,7 +38,7 @@ export async function CreateCollection(
     const imageResponse = await UploadImageToBucket({
       bucketName: 'collection_images',
       file: image_url,
-      folder: `${user.id}/${image_url?.name}-${name}`,
+      folder: `${user.id}/${image_url?.name}`,
       supabaseInstance: supabase,
       user: user,
     });
@@ -90,7 +90,7 @@ export async function CreateCollection(
 export async function DeleteCollection(
   collection: CollectionData
 ): Promise<ApiResponse<null>> {
-  const { supabase, user } = await AuthService.GetUser();
+  const { supabase, user } = await GetUser();
 
   try {
     const { error } = await supabase
@@ -130,7 +130,7 @@ export async function UpdateCollection(
   collectionId: string,
   payload: updateCollection
 ): Promise<ApiResponse<CollectionData>> {
-  const { user, supabase } = await AuthService.GetUser();
+  const { user, supabase } = await GetUser();
   const validatedFields = updateCollectionSchema.safeParse(payload);
 
   if (!validatedFields.success) {

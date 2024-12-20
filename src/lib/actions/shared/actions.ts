@@ -15,7 +15,6 @@ export async function UploadImageToBucket({
   bucketName,
   folder,
   supabaseInstance,
-  user,
   file,
 }: UploadImageToBucketProps): Promise<ApiResponse<string>> {
   if (!file) {
@@ -32,7 +31,6 @@ export async function UploadImageToBucket({
     .upload(folder, file, {
       upsert: true,
     });
-  console.log(errorImageUpload, user);
 
   if (errorImageUpload) {
     return {

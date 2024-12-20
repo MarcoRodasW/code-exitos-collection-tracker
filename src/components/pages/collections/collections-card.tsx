@@ -43,8 +43,9 @@ export function CollectionCard({ collection }: CollectionCardProps) {
 
       <CardContent>
         <p className='line-clamp-2 text-base text-foreground'>
-          {Intl.NumberFormat('en-US', {
-            currency: 'USD',
+          {Intl.NumberFormat('es-HN', {
+            currency: 'LPS',
+            currencyDisplay: 'symbol',
             style: 'currency',
           }).format(collection.value)}
         </p>
