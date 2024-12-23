@@ -11,6 +11,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -123,6 +124,7 @@ export default function CreateCollectionItemModal({
                         <FormLabel>Value</FormLabel>
                         <FormControl>
                           <Input
+                            disabled
                             type='number'
                             {...field}
                             onChange={(e) =>
@@ -130,6 +132,9 @@ export default function CreateCollectionItemModal({
                             }
                           />
                         </FormControl>
+                        <FormDescription>
+                          Value is updated automatic
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -158,8 +163,7 @@ export default function CreateCollectionItemModal({
               >
                 <Image
                   src={
-                    collection.image_url ||
-                    '/placeholder.svg?height=400&width=400'
+                    collection.image_url ?? 'https://fakeimg.pl/600x400?text=@'
                   }
                   alt={collection.name}
                   fill
@@ -190,7 +194,7 @@ export default function CreateCollectionItemModal({
               <h3 className='text-lg font-semibold'>Items</h3>
               <CreateItemModal collection={collection} />
             </div>
-            <div className='overflow-x-auto'>
+            <div className='max-h-[300px] overflow-auto'>
               <CollectionItemsTable collection={collection} />
             </div>
           </div>

@@ -13,9 +13,10 @@ import {
 import { GetCollectionItems } from '@/lib/services/items/items.service';
 import { CollectionData } from '@/lib/types/collections/collections.types';
 import { ItemsData } from '@/lib/types/items/items.types';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import DeleteItemModal from './modals/delete-item-modal';
 
 interface CollectionItemsTableProps {
   collection: CollectionData;
@@ -93,8 +94,7 @@ export default function CollectionItemsTable({
                     <div className='relative h-10 w-10'>
                       <Image
                         src={
-                          item.image_url ||
-                          '/placeholder.svg?height=40&width=40'
+                          item.image_url ?? 'https://fakeimg.pl/600x400?text=@'
                         }
                         alt={item.name}
                         fill
@@ -123,13 +123,7 @@ export default function CollectionItemsTable({
                     <Button size={'icon'} variant={'ghost'}>
                       <Pencil size={16} />
                     </Button>
-                    <Button
-                      size={'icon'}
-                      variant={'ghost'}
-                      className='text-destructive'
-                    >
-                      <Trash2 size={16} />
-                    </Button>
+                    <DeleteItemModal itemData={item} />
                   </TableCell>
                 </TableRow>
               ))
