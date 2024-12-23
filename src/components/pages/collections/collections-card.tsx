@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { CollectionData } from '@/lib/types/collections/collections.types';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -56,6 +57,26 @@ export function CollectionCard({ collection }: CollectionCardProps) {
 
       <CardFooter>
         <CreateCollectionItemModal collection={collection} />
+      </CardFooter>
+    </Card>
+  );
+}
+
+export function SkeletonCard() {
+  return (
+    <Card className='overflow-hidden'>
+      <div className='relative aspect-[4/3]'>
+        <Skeleton className='h-full w-full' />
+      </div>
+      <CardHeader>
+        <Skeleton className='h-6 w-3/4' />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className='mb-2 h-4 w-1/2' />
+        <Skeleton className='h-4 w-full' />
+      </CardContent>
+      <CardFooter>
+        <Skeleton className='h-9 w-full' />
       </CardFooter>
     </Card>
   );
