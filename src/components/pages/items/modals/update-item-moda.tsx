@@ -16,7 +16,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { UpdateCollectionItem } from '@/lib/actions/items/actions';
+import {
+  UpdateCollectionItem,
+  UpdateImageCollectionItem,
+} from '@/lib/actions/items/actions';
 import {
   ItemsData,
   updateColletionItemSchema,
@@ -24,7 +27,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Pencil, Upload } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -34,8 +37,10 @@ interface UpdateItemModalProps {
 }
 
 export default function UpdateItemModal({ item }: UpdateItemModalProps) {
+  const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+
   const form = useForm<z.infer<typeof updateColletionItemSchema>>({
     resolver: zodResolver(updateColletionItemSchema),
     defaultValues: {
@@ -59,6 +64,28 @@ export default function UpdateItemModal({ item }: UpdateItemModalProps) {
     } else {
       toast.error(message);
     }
+  }
+
+  async function onImageChange(file: File) {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+    const { data, message, succeed } = await UpdateImageCollectionItem(
+      formData,
+      item
+    );
+    if (!data && !succeed) {
+      toast.error(message);
+      return;
+    }
+    form.reset({
+      name: data?.name,
+      price: data?.price,
+      quantity: data?.quantity,
+      year_made: data?.year_made ?? 2024,
+    });
+    setOpen(false);
+    toast.success(message);
   }
 
   return (
@@ -168,8 +195,27 @@ export default function UpdateItemModal({ item }: UpdateItemModalProps) {
               className='rounded-md'
             />
             {isHovering && (
-              <div className='absolute inset-0 flex items-center justify-center rounded-md bg-black bg-opacity-50'>
-                <Upload className='h-12 w-12 cursor-pointer text-white' />
+              <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+                <label htmlFor='image-upload' className='cursor-pointer'>
+                  {isPending ? (
+                    <Loader2 className='h-12 w-12 animate-spin text-white' />
+                  ) : (
+                    <Upload className='h-12 w-12 text-white' />
+                  )}
+                </label>
+                <Input
+                  id='image-upload'
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    startTransition(async function () {
+                      await onImageChange(file);
+                    });
+                  }}
+                />
               </div>
             )}
           </div>
