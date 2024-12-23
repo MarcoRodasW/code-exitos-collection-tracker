@@ -8,7 +8,8 @@ export async function oAuthSignIn() {
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo: 'http://localhost:3000/auth/callback',
+      redirectTo:
+        'https://code-exitos-collection-tracker.vercel.app/auth/callback',
     },
   });
 
