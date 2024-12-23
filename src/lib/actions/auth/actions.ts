@@ -1,5 +1,6 @@
 'use server';
 
+import { getURL } from '@/lib/utils';
 import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
@@ -8,8 +9,7 @@ export async function oAuthSignIn() {
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo:
-        'https://code-exitos-collection-tracker.vercel.app/auth/callback',
+      redirectTo: getURL(),
     },
   });
 
