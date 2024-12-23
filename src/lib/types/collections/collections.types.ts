@@ -29,3 +29,15 @@ export const updateCollectionSchema = z.object({
 });
 
 export type updateCollection = z.infer<typeof updateCollectionSchema>;
+
+export const updateCollectionImageSchema = z.object({
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      '.jpg, .jpeg, .png and .webp files are accepted.'
+    ),
+});
+
+export type updateCollectionImage = z.infer<typeof updateCollectionImageSchema>;

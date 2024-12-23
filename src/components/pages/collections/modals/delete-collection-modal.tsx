@@ -47,7 +47,13 @@ export default function DeleteCollectionModal({
             disabled={isPending}
             onClick={() => {
               startTransition(async function () {
-                const { message } = await DeleteCollectionAction(collection);
+                const { message, error, succeed } =
+                  await DeleteCollectionAction(collection);
+
+                if (!succeed && error) {
+                  toast.error(message);
+                  return;
+                }
                 toast.success(message);
               });
             }}

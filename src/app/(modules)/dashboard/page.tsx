@@ -3,15 +3,12 @@ import { MostValueItemsChart } from '@/components/pages/dashboard/most-value-ite
 import {
   GetMostValueCollections,
   GetMostValueItems,
-  GetOlderItems,
 } from '@/lib/services/dashboard/dashboard.service';
 import { Suspense } from 'react';
 
 export default async function DashboardPage() {
   const mostValueCollections = await GetMostValueCollections();
   const mostValueItems = await GetMostValueItems();
-  const olderItems = await GetOlderItems();
-  console.log({ mostValueCollections, mostValueItems, olderItems });
   return (
     <section className='grid h-full w-full grid-cols-1 gap-5 md:grid-cols-4'>
       <div className='col-span-1 min-h-[350px] w-full md:col-span-2'>
