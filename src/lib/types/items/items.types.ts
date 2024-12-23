@@ -23,3 +23,16 @@ export const createCollectionItemSchema = z.object({
 });
 
 export type createCollectionItem = z.infer<typeof createCollectionItemSchema>;
+
+export const updateColletionItemSchema = z.object({
+  name: z.string(),
+  price: z.number().min(1, {
+    message: 'Required to enter a valid price',
+  }),
+  quantity: z.number().min(1, {
+    message: 'Required to enter quantity of items',
+  }),
+  year_made: z.number(),
+});
+
+export type updateCollectionItem = z.infer<typeof updateColletionItemSchema>;

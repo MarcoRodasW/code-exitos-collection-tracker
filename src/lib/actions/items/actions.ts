@@ -4,6 +4,8 @@ import { GetUser } from '@/lib/services/auth/auth.service';
 import {
   createCollectionItemSchema,
   ItemsData,
+  updateCollectionItem,
+  updateColletionItemSchema,
 } from '@/lib/types/items/items.types';
 import { ApiResponse } from '@/lib/types/shared/api-response';
 import { revalidatePath } from 'next/cache';
@@ -118,6 +120,57 @@ export async function DeleteCollectionItem(
       error: null,
       message: 'Collection Item deleted succesfully!',
       succeed: true,
+    };
+  } catch (error: any) {
+    console.error('Error inserting inventory item:', error);
+    return {
+      error: error.name || 'unknown_error',
+      message: error.message || 'An unknown error occurred.',
+      succeed: false,
+      data: null,
+    };
+  }
+}
+
+export async function UpdateCollectionItem(
+  itemId: string,
+  payload: updateCollectionItem
+): Promise<ApiResponse<ItemsData>> {
+  const { user, supabase } = await GetUser();
+
+  const validatedFields = updateColletionItemSchema.safeParse(payload);
+
+  if (!validatedFields.success) {
+    return {
+      error: validatedFields.error.name,
+      message: validatedFields.error.message,
+      succeed: false,
+      data: null,
+    };
+  }
+
+  try {
+    const { data: updateData, error: updateError } = await supabase
+      .from('items')
+      .update({ ...validatedFields.data })
+      .eq('user_id', user.id)
+      .eq('id', itemId)
+      .select();
+    if (updateError) {
+      return {
+        error: updateError.name,
+        message: updateError.message,
+        succeed: false,
+        data: null,
+      };
+    }
+    const updatedValue = updateData[0];
+    revalidatePath('/collections');
+    return {
+      error: null,
+      message: `Collection ${updatedValue.name} updated succesfully!`,
+      succeed: true,
+      data: updatedValue,
     };
   } catch (error: any) {
     console.error('Error inserting inventory item:', error);

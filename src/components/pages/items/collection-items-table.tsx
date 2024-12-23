@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -13,10 +12,10 @@ import {
 import { GetCollectionItems } from '@/lib/services/items/items.service';
 import { CollectionData } from '@/lib/types/collections/collections.types';
 import { ItemsData } from '@/lib/types/items/items.types';
-import { Pencil } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import DeleteItemModal from './modals/delete-item-modal';
+import UpdateItemModal from './modals/update-item-moda';
 
 interface CollectionItemsTableProps {
   collection: CollectionData;
@@ -120,9 +119,7 @@ export default function CollectionItemsTable({
                     }).format(item.total_price ?? 0)}
                   </TableCell>
                   <TableCell className='flex flex-row gap-1'>
-                    <Button size={'icon'} variant={'ghost'}>
-                      <Pencil size={16} />
-                    </Button>
+                    <UpdateItemModal item={item} />
                     <DeleteItemModal itemData={item} />
                   </TableCell>
                 </TableRow>
